@@ -113,4 +113,72 @@ describe('Домашнее задание к лекции 5 «Классы»', (
       expect(secondBook).toEqual(null);
     });
   })
+
+
+  describe('Задача №2 Дополнительные тесты', () => {
+    let library, printItem;
+  
+    beforeEach(function(){
+      library = new Library('Библиотека имени Ленина');
+      printItem1 = new PrintEditionItem('Типовой школьный журнал', 2019, 102);
+      printItem2 = new PrintEditionItem('Полное собрание рассказов о Шерлоке Холмсе', 1919, 1008);
+      printItem3 = new PrintEditionItem('Машина времени', 1895, 138);
+      printItem4 = new PrintEditionItem('Мурзилка', 1934, 25);
+    });
+
+    it('создание библиотеки', () => {
+      expect(library).toBeDefined();
+      expect(library.name).toEqual('Библиотека имени Ленина');
+      expect(library.books).toEqual(jasmine.any(Array));
+    });
+
+    it('добавление книг', () => {
+      library.addBook(printItem1);
+      library.addBook(printItem2);
+      library.addBook(printItem3);
+      library.addBook(printItem4);
+      expect(library.books[0].name).toEqual('Типовой школьный журнал');
+      expect(library.books[1].name).toEqual('Полное собрание рассказов о Шерлоке Холмсе');
+      expect(library.books[2].name).toEqual('Машина времени');
+      expect(library.books[3].name).toEqual('Мурзилка');
+      expect(library.books.length).toEqual(4);
+    });
+
+     it('поиск книги', () => {
+      library.addBook(printItem1);
+      library.addBook(printItem2);
+      library.addBook(printItem3);
+      library.addBook(printItem4);      
+      const firstBook = library.findBookBy("releaseDate", 1919);
+      expect(firstBook.name).toEqual('Полное собрание рассказов о Шерлоке Холмсе');
+      const secondBook = library.findBookBy("releaseDate", 2154);
+      expect(secondBook).toEqual(null);
+    });
+    
+     it('выдача книги', () => {
+      library.addBook(printItem1);
+      library.addBook(printItem2);
+      library.addBook(printItem3);
+      library.addBook(printItem4);
+      const firstBook = library.giveBookByName('Полное собрание рассказов о Шерлоке Холмсе');
+      expect(firstBook.name).toEqual('Полное собрание рассказов о Шерлоке Холмсе');
+      expect(library.books.length).toEqual(3);
+    });
+   
+   it('повреждаем, восстанавливаем и возвращаем выданную книгу', () => {
+      library.addBook(printItem1);
+      library.addBook(printItem2);
+      const badBook = library.giveBookByName('Полное собрание рассказов о Шерлоке Холмсе');
+      expect(badBook.name).toEqual('Полное собрание рассказов о Шерлоке Холмсе');
+      expect(library.books.length).toEqual(1);
+      badBook.state = 25;
+      expect(badBook.state).toEqual(25);
+      badBook.state = 60;
+      expect(badBook.state).toEqual(60);
+      library.addBook(badBook);
+      const returnBook = library.findBookBy("releaseDate", 1919);
+      expect(returnBook.name).toEqual('Полное собрание рассказов о Шерлоке Холмсе');
+      expect(library.books.length).toEqual(2);
+    });
+  });
 });
